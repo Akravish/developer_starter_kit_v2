@@ -6,9 +6,6 @@
   "scripts": {
     "test": "gulp"
   },
-  "keywords": [
-    "GulpJS"
-  ],
   "author": "Akravish ssdosp@gmail.com",
   "license": "MIT",
   "dependencies": {
