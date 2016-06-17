@@ -65,35 +65,6 @@ gulp.task 'html', ->
   .pipe gulp.dest 'build'
   .pipe refresh()
 
-# Cleanup build directory
-gulp.task 'clean', (cb)->
-  del ['build'], cb
-
-#Copy js
-gulp.task 'js', ->
-  gulp.src 'src/js/**/*'
-  .pipe gulp.dest 'build/js'
-
-#Copy css
-gulp.task 'css', ->
-  gulp.src 'src/css/**/*'
-  .pipe gulp.dest 'build/css'
-
-#Copy img
-gulp.task 'img', ->
-  gulp.src 'src/img/**/*'
-  .pipe gulp.dest 'build/img'
-
-#Copy fonts
-gulp.task 'fonts', ->
-  gulp.src 'src/fonts/**/*'
-  .pipe gulp.dest 'build/fonts'
-
-#Copy public
-gulp.task 'public', ->
-  gulp.src 'src/public/**/*'
-  .pipe gulp.dest 'build'
-
 #Servers for web and api
 gulp.task 'servers', (callback)->
   log = util.log

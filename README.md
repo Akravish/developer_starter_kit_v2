@@ -15,7 +15,7 @@
 ### Automatization
 
 * [gulp][5]
-* [Live Reload] [6]
+* [BrowserSync] [6]
 
 ##  Preparing the environment
 
@@ -63,7 +63,7 @@ http://localhost:8000
 [3]: http://www.ecmascript.org/
 [4]: http://bower.io/
 [5]: http://gulpjs.com/
-[6]: https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei?hl=ru
+[6]: https://www.browsersync.io/
 
 ### To do
 
