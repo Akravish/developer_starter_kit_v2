@@ -116,7 +116,6 @@ gulp.task 'default', ['html', 'sass', 'js', 'css', 'fonts', 'img','public','refr
 
 
 #---------------------------------------------
-    "autoprefixer-stylus": "^0.9.2",
     "gulp-bump": "^2.1.0",
     "gulp-cached": "^1.1.0",
     "gulp-changed": "^1.3.0",

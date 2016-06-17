@@ -23,6 +23,7 @@
     "method-override": "^2.3.6",
     "morgan": "~1.7.0",
 
+
     "bower": "~1.7.9",
     "jade": "^1.11.0",
     "browser-sync": "^2.13.0",
@@ -37,9 +38,6 @@
     "gulp-jade-inheritance": "^0.5.5",
 
     "del": "^2.2.0"
-
-
-
 
   }
 }

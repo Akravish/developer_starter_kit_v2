@@ -1,18 +1,16 @@
 'use strict';
 
 //---Import Modules
-const gulp = require('gulp');
-const del = require('del');
-
-const debug = require('gulp-debug');//todo delete after finished work
-
-const sass = require('gulp-sass');
-const plumber = require('gulp-plumber');
-const sourcemaps = require('gulp-sourcemaps');
-const autoprefixer = require('gulp-autoprefixer');
-const newer = require('gulp-newer'); //todo with 40ms, without 30ms....fix it
-const jadeInheritance = require('gulp-jade-inheritance');
-const jade = require('gulp-jade');
+var gulp = require('gulp'),
+    del = require('del'),
+    debug = require('gulp-debug'),
+    sass = require('gulp-sass'),
+    plumber = require('gulp-plumber'),
+    sourcemaps = require('gulp-sourcemaps'),
+    autoprefixer = require('gulp-autoprefixer'),
+    newer = require('gulp-newer'), //todo with 40ms, without 30ms....fix it
+    jadeInheritance = require('gulp-jade-inheritance'),
+    jade = require('gulp-jade');
 
 //const util = require('gulp-util');
 //glob = require 'glob'
@@ -26,73 +24,110 @@ const jade = require('gulp-jade');
 
 
 //---Serve
-const browsersync = require('browser-sync').create();
-const reload  = browsersync.reload;
+var browsersync = require('browser-sync').create(),
+    reload  = browsersync.reload;
 //---End serve
 
 
 //---VARS
-const apiServerPort   = 3001,
-      webServerPort   = 8000,
-      autoOpenBrowser = false;
-      //destFolder      =
+var apiServerPort   = 3001,
+    webServerPort   = 8000,
+    autoOpenBrowser = false;
+
+
+var devSrc = 'temp/f1',
+    devDest = 'temp/f2',
+    pathProject = {
+        del: '/**/*.*',
+        js: {
+            input: '/js/*.js',
+            output: '/js'
+        },
+        css: {
+            input: '/css/*.css',
+            output: '/css'
+        },
+        img: {
+            input: '/img/**/*.*',
+            output: '/img'
+        },
+        fonts: {
+            input: '/fonts/**/**',
+            output: '/fonts'
+        },
+        assets: {
+            input: '/assets/**/*',
+            output: '/assets'
+        },
+        vendor: {
+            input: '',
+            output: ''
+        },
+        sass: {
+            input: 'assets/**/*',
+            output: '/assets'
+        },
+        jade: {
+            input1: '/jade/*.jade',
+            input2: '/jade',
+            watchPath: '/**/*.jade'
+        }
+    };
 
 //---End VARS
+
+//For Future
+//----
+//can use in gulp v4.0 {since: gulp.lastRun('js')}
+//gulp.src('temp/folder/css/*.css',{since: gulp.lastRun('name_task')})
+//---
 
 
 //---DEL build directory
 gulp.task('del', function(){
-    return del(['temp/f2/**/*.*']).then( function(paths){
+    return del([devDest + pathProject.del]).then(function(paths){
             console.log('Deleted:\n',paths.join('\n'));})
 });
-
 //---Copy JS
 gulp.task('js', function () {
-    return gulp.src('temp/f1/js/*.js')
-        .pipe(newer('temp/f2/js/*.js'))
-        .pipe(gulp.dest('temp/f2/js'))
+    return gulp.src(devSrc + pathProject.js.input)
+        .pipe(newer(devDest + pathProject.js.input))
+        .pipe(gulp.dest(devDest + pathProject.js.output))
         .pipe(reload({stream:true}));
 });
-
 //---Copy CSS
 gulp.task('css', function () {
-    return gulp.src('temp/f1/css/*.css')//todo can use in gulp v4.0 {since: gulp.lastRun('js')}
-        .pipe(newer('temp/f2/css/*.css'))
-        .pipe(gulp.dest('temp/f2/css'))
+    return gulp.src(devSrc + pathProject.css.input)
+        .pipe(newer(devDest + pathProject.css.input))
+        .pipe(gulp.dest(devDest + pathProject.css.output))
         .pipe(reload({stream:true}));
 });
-
 //---Copy IMG
 gulp.task('img', function () {
-    return gulp.src('temp/f1/img/**/*.*')
-        .pipe(newer('temp/f2/img'))
+    return gulp.src(devSrc + pathProject.img.input)
+        .pipe(newer(devDest + pathProject.img.output))
         //todo insert imagemin here code
-        .pipe(gulp.dest('temp/f2/img'))
+        .pipe(gulp.dest(devDest + pathProject.img.output))
         .pipe(reload({stream:true}));
 });
-
 //---Copy FONTS
 gulp.task('fonts', function () {
-    return gulp.src('temp/f1/fonts/**/**')
-        .pipe(newer('temp/f2/fonts'))
-        .pipe(gulp.dest('temp/f2/fonts'))
+    return gulp.src(devSrc + pathProject.fonts.input)
+        .pipe(newer(devDest + pathProject.fonts.output))
+        .pipe(gulp.dest(devDest + pathProject.fonts.output))
         .pipe(reload({stream:true}));
 });
-
 //---Copy ASSETS
 gulp.task('assets', function () {
-    return gulp.src('temp/f1/assets/**/*')
-        .pipe(newer('temp/f2/assets'))
+    return gulp.src(devSrc + pathProject.assets.input)
+        .pipe(newer(devDest + pathProject.assets.output))
         //todo insert fontsmin here code
-        .pipe(gulp.dest('temp/f2/assets'))
+        .pipe(gulp.dest(devDest + pathProject.assets.output))
         .pipe(reload({stream:true}));
 });
-
-//---Vendors
+//---VENDORS
 //todo dest must be reload when files sre added
-
 //todo addes errorlog for all task
-
 //---SASS
 gulp.task('sass', function(){
     //todo not show errors...fix it
@@ -107,36 +142,37 @@ gulp.task('sass', function(){
         .pipe(gulp.dest('temp/f2/css'))
         .pipe(reload({stream:true}));
 });
-
+//---JADE
 gulp.task('jade', function() {
-    gulp.src(['temp/f1/jade/*.jade','!src/jade/_*'])
-        .pipe(jadeInheritance({ basedir: 'temp/f1/jade'}))
+    gulp.src([devSrc + pathProject.jade.input1,'!src/jade/_*'])
+        .pipe(jadeInheritance({ basedir: devSrc + pathProject.jade.input2}))
         .pipe(jade({
             pretty: '\t',
-            basedir: 'temp/f1/jade'
+            basedir: devSrc + pathProject.jade.input1
         }))
         //.on('error', handleError)
-        .pipe(gulp.dest('temp/f2/'))
+        .pipe(gulp.dest(devDest + '/'))
         .pipe(reload({stream:true}));
 });
 
+
+//---WATCH
 gulp.task('watch', function () {
     //js
-    gulp.watch('temp/f1/js/*.js', ['js']);
+    gulp.watch(devSrc + pathProject.js.input, ['js']);
     //css
-    gulp.watch('temp/f1/css/*.css', ['css']);
+    gulp.watch(devSrc + pathProject.css.input, ['css']);
     //img
-    gulp.watch('temp/f1/img/**/*.*', ['img']);
+    gulp.watch(devSrc + pathProject.img.input, ['img']);
     //fonts
-    gulp.watch('temp/f1/fonts/**/**', ['fonts']);
+    gulp.watch(devSrc + pathProject.fonts.input, ['fonts']);
     //public
-    gulp.watch('temp/f1/assets/**/*', ['assets']);
+    gulp.watch(devSrc + pathProject.assets.input, ['assets']);
     //sass
-    gulp.watch('temp/f1/**/*.sass', ['sass']);
+    gulp.watch(devSrc +'/**/*.sass', ['sass']);
     //jade
-    gulp.watch('temp/f1/**/*.jade', ['jade']);
+    gulp.watch(devSrc + pathProject.jade.watchPath, ['jade']);
 });
-
 
 //---Serve
 gulp.task('serve', function(callback){
@@ -146,27 +182,26 @@ gulp.task('serve', function(callback){
         ui: {
             port: apiServerPort
         },
-        open: autoOpenBrowser // Stop the browser from automatically opening
+        open: autoOpenBrowser
     });
 
     //watch all for files in dest folder
-    //browsersync.watch('temp/f2/**/*.*').on('change',reload);
+    //browsersync.watch('temp/folder/**/*.*').on('change',reload);
 });
 
-gulp.task('default',['serve','watch'], function(callback){
+//---BUILD
+gulp.task('build',['js','css','img','fonts','assets','sass','jade'], function(callback){
+    callback(console.log('--- Build DONE ---'));
+});
+
+gulp.task('default',['build','serve','watch'], function(callback){
     console.log('+++');
     callback();
 });
 
 
 //===================================================
-
-//'use strict';
-//
 //// Инициализируем плагины
-//var gulp = require('gulp'),
-
-//    autoprefixer = require('gulp-autoprefixer'),
 //    imagemin = require('gulp-imagemin'),
 //    cssbeautify = require('gulp-cssbeautify'),
 //    gutil = require('gulp-util'),
@@ -182,57 +217,6 @@ gulp.task('default',['serve','watch'], function(callback){
 //    gutil.log(err);
 //    gutil.beep();
 //};
-//
-//// Пути к файлам
-//var path = {
-//    html: {
-//        source: ['./source/**/*.jade', '!./source/partials/*.jade', '!./source/blocks/**/*.jade'],
-//        watch: 'source/**/*.jade',
-//        destination: './public/',
-//        basedir: './source'
-//    },
-//    css: {
-//        source: ['./source/css/*.styl', '!./source/css/lib/**/*.styl', '!./source/**/_*.styl'],
-//        watch: 'source/**/*.styl',
-//        destination: './public/css/'
-//    },
-//    assets: {
-//        source: './assets/**/*',
-//        watch: 'assets/**/*',
-//        destination: './public'
-//    },
-//    img: {
-//        source: './source/img/**/*.{jpg,jpeg,png,gif,svg}',
-//        watch: 'source/img/**/*',
-//        destination: './public/img'
-//    },
-//    js: {
-//        plugins: {
-//            source: './source/js/*.js',
-//            watch: './source/js/*',
-//            destination: './public/js'
-//        }
-//    }
-//};
-//
-//
-//// Локальный сервер
-//gulp.task('browser-sync', function () {
-//    browserSync.init([
-//        '*.html',
-//        'css/*.css',
-//        '**/*.{png,jpg,svg}',
-//        'js/*.js',
-//        'fonts/*.{eot,woff,woff2,ttf}'
-//    ], {
-//        open: true,
-//        server: { baseDir: './public' }
-//    });
-//});
-//
-//
-//// Собираем html из Jade
-
 //
 //// Копируем и минимизируем изображения
 //gulp.task('images', function() {
@@ -268,15 +252,4 @@ gulp.task('default',['serve','watch'], function(callback){
 //        .on('error', handleError)
 //        .pipe(gulp.dest(path.js.plugins.destination))
 //        .pipe(reload({stream:true}));
-//});
-//
-//
-//gulp.task("build", ['stylus', 'jade', 'images', 'plugins', 'copy']);
-//
-//gulp.task("default", ["build", "browser-sync"], function(){
-//    gulp.watch(path.css.watch, ["stylus"]);
-//    gulp.watch(path.html.watch, ["jade"]);
-//    gulp.watch(path.img.watch, ["images"]);
-//    gulp.watch(path.js.plugins.watch, ["plugins"]);
-//    gulp.watch(path.assets.watch, ["copy"]);
 //});

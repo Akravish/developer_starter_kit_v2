@@ -1,3 +1,10 @@
+### To do
+
+1. add modernizr.js
+2. normalize.css
+3. uprgade browser.jade
+
+
 # Frontend Starter Kit v - 2.0.0
 
 ## Technologies
@@ -46,16 +53,20 @@ gulp
 ### The default task
 Starts:
 * Compile the source code
-* Running servers
-* Start Live Reload
 * Start monitoring code
+* Start BrowserSync
 
-###  Web server
-For convenient viewing of the results of development + Live Reload page after recompiling the code, you must use a web server (port 8000).
+###  Server's
 Sample query:
 
+####  Web server
 ~~~bash
 http://localhost:8000
+~~~
+
+####  API Server
+~~~bash
+http://localhost:3001
 ~~~
 
 [1]: http://jade-lang.com/
@@ -65,8 +76,3 @@ http://localhost:8000
 [5]: http://gulpjs.com/
 [6]: https://www.browsersync.io/
 
-### To do
-
-1. add modernizr.js
-2. normalize.css
-3. uprgade browser.jade
