@@ -12,7 +12,7 @@ var gulp = require('gulp'),
     jadeInheritance = require('gulp-jade-inheritance'),
     jade = require('gulp-jade');
 
-//const util = require('gulp-util');
+
 //glob = require 'glob'
 //consolidate = require "gulp-consolidate"
 //inlineCss = require "gulp-inline-css"
@@ -23,11 +23,16 @@ var gulp = require('gulp'),
 //---END Base imports and vars
 
 
+//---Error
+var util = require('gulp-util'),
+    ulog = util.log,
+    ucolors = util.colors;
+//---End error
+
 //---Serve
 var browsersync = require('browser-sync').create(),
     reload  = browsersync.reload;
 //---End serve
-
 
 //---VARS
 var apiServerPort   = 3001,
@@ -76,6 +81,16 @@ var devSrc = 'temp/f1',
 
 //---End VARS
 
+
+// Error handler for gulp-plumber
+var errorHandler = function (err) {
+    ulog(ucolors.red("-------ERROR-----------------------"));
+    ulog([ucolors.red((err.name + ' in ' + err.plugin)), '', ucolors.magenta(err.message), ''].join('\n'));
+    this.emit('end');
+    ulog(ucolors.red("-----------------------------------"));
+
+};
+
 //For Future
 //----
 //can use in gulp v4.0 {since: gulp.lastRun('js')}
@@ -91,6 +106,7 @@ gulp.task('del', function(){
 //---Copy JS
 gulp.task('js', function () {
     return gulp.src(devSrc + pathProject.js.input)
+        .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.js.input))
         .pipe(gulp.dest(devDest + pathProject.js.output))
         .pipe(reload({stream:true}));
@@ -98,6 +114,7 @@ gulp.task('js', function () {
 //---Copy CSS
 gulp.task('css', function () {
     return gulp.src(devSrc + pathProject.css.input)
+        .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.css.input))
         .pipe(gulp.dest(devDest + pathProject.css.output))
         .pipe(reload({stream:true}));
@@ -105,6 +122,7 @@ gulp.task('css', function () {
 //---Copy IMG
 gulp.task('img', function () {
     return gulp.src(devSrc + pathProject.img.input)
+        .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.img.output))
         //todo insert imagemin here code
         .pipe(gulp.dest(devDest + pathProject.img.output))
@@ -113,6 +131,7 @@ gulp.task('img', function () {
 //---Copy FONTS
 gulp.task('fonts', function () {
     return gulp.src(devSrc + pathProject.fonts.input)
+        .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.fonts.output))
         .pipe(gulp.dest(devDest + pathProject.fonts.output))
         .pipe(reload({stream:true}));
@@ -120,6 +139,7 @@ gulp.task('fonts', function () {
 //---Copy ASSETS
 gulp.task('assets', function () {
     return gulp.src(devSrc + pathProject.assets.input)
+        .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.assets.output))
         //todo insert fontsmin here code
         .pipe(gulp.dest(devDest + pathProject.assets.output))
@@ -134,7 +154,7 @@ gulp.task('sass', function(){
     return gulp.src(['temp/f1/sass/*.sass','!src/sass/_*'])
         //.pipe(plumber())
         //.pipe(sourcemaps.init())//todo del in prod ...set some if and we have some problem in it...test in livereload
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass().on('error', errorHandler))
         //.pipe(sourcemaps.write({includeContent: false}))//todo we have some problem in it...test in livereload
         //.pipe(sourcemaps.init({loadMaps: true}))//todo we have some problem in browsersync
         .pipe(autoprefixer({ browser: ['last 2 version'] }))
@@ -146,15 +166,14 @@ gulp.task('sass', function(){
 gulp.task('jade', function() {
     gulp.src([devSrc + pathProject.jade.input1,'!src/jade/_*'])
         .pipe(jadeInheritance({ basedir: devSrc + pathProject.jade.input2}))
+        .on('error', errorHandler)
         .pipe(jade({
             pretty: '\t',
             basedir: devSrc + pathProject.jade.input1
         }))
-        //.on('error', handleError)
         .pipe(gulp.dest(devDest + '/'))
         .pipe(reload({stream:true}));
 });
-
 
 //---WATCH
 gulp.task('watch', function () {
@@ -175,7 +194,7 @@ gulp.task('watch', function () {
 });
 
 //---Serve
-gulp.task('serve', function(callback){
+gulp.task('serve', function(){
     browsersync.init({
         server: 'temp/f2',
         port: webServerPort,
@@ -211,13 +230,6 @@ gulp.task('default',['build','serve','watch'], function(callback){
 //    uglify = require('gulp-uglify'),
 //    imageminPngquant = require('imagemin-pngquant'),
 
-//
-//// Функция обработки ошибок
-//var handleError = function(err) {
-//    gutil.log(err);
-//    gutil.beep();
-//};
-//
 //// Копируем и минимизируем изображения
 //gulp.task('images', function() {
 //    gulp.src(path.img.source)
@@ -237,19 +249,5 @@ gulp.task('default',['build','serve','watch'], function(callback){
 //    gulp.src(path.assets.source)
 //        .on('error', handleError)
 //        .pipe(gulp.dest(path.assets.destination))
-//        .pipe(reload({stream:true}));
-//});
-//
-//// Собираем JS
-//gulp.task('plugins', function() {
-//    gulp.src(path.js.plugins.source)
-//        .pipe(include())
-//        .pipe(gulp.dest(path.js.plugins.destination))
-//        .pipe(uglify())
-//        .pipe(rename({
-//            suffix: ".min"
-//        }))
-//        .on('error', handleError)
-//        .pipe(gulp.dest(path.js.plugins.destination))
 //        .pipe(reload({stream:true}));
 //});

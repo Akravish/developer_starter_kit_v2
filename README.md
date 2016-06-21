@@ -59,12 +59,12 @@ Starts:
 ###  Server's
 Sample query:
 
-####  Web server
+#####  Web server
 ~~~bash
 http://localhost:8000
 ~~~
 
-####  API Server
+#####  API Server
 ~~~bash
 http://localhost:3001
 ~~~
