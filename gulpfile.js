@@ -11,17 +11,7 @@ var gulp = require('gulp'),
     newer = require('gulp-newer'), //todo with 40ms, without 30ms....fix it
     jadeInheritance = require('gulp-jade-inheritance'),
     jade = require('gulp-jade');
-
-
-//glob = require 'glob'
-//consolidate = require "gulp-consolidate"
-//inlineCss = require "gulp-inline-css"
-//extReplace = require 'gulp-ext-replace'
-//prettify = require 'gulp-html-prettify'
-//minifyHTML = require 'gulp-minify-html'
-
 //---END Base imports and vars
-
 
 //---Error
 var util = require('gulp-util'),
@@ -39,9 +29,8 @@ var apiServerPort   = 3001,
     webServerPort   = 8000,
     autoOpenBrowser = false;
 
-
-var devSrc = 'temp/f1',
-    devDest = 'temp/f2',
+var devSrc = 'src',
+    devDest = 'build',
     pathProject = {
         del: '/**/*.*',
         js: {
@@ -69,8 +58,8 @@ var devSrc = 'temp/f1',
             output: ''
         },
         sass: {
-            input: 'assets/**/*',
-            output: '/assets'
+            input: '/sass/*.sass',
+            output: '/css'
         },
         jade: {
             input1: '/jade/*.jade',
@@ -81,6 +70,12 @@ var devSrc = 'temp/f1',
 
 //---End VARS
 
+//For Future
+//-----
+//can use in gulp v4.0 {since: gulp.lastRun('js')}
+//gulp.src('temp/folder/css/*.css',{since: gulp.lastRun('name_task')})
+//-----
+
 
 // Error handler for gulp-plumber
 var errorHandler = function (err) {
@@ -90,14 +85,6 @@ var errorHandler = function (err) {
     ulog(ucolors.red("-----------------------------------"));
 
 };
-
-//For Future
-//----
-//can use in gulp v4.0 {since: gulp.lastRun('js')}
-//gulp.src('temp/folder/css/*.css',{since: gulp.lastRun('name_task')})
-//---
-
-
 //---DEL build directory
 gulp.task('del', function(){
     return del([devDest + pathProject.del]).then(function(paths){
@@ -146,12 +133,12 @@ gulp.task('assets', function () {
         .pipe(reload({stream:true}));
 });
 //---VENDORS
-//todo dest must be reload when files sre added
-//todo addes errorlog for all task
+//todo add task for install vendor
+//todo dest must be reload when files src added
 //---SASS
 gulp.task('sass', function(){
     //todo not show errors...fix it
-    return gulp.src(['temp/f1/sass/*.sass','!src/sass/_*'])
+    return gulp.src([devSrc + pathProject.sass.input +'','!src/sass/_*'])
         //.pipe(plumber())
         //.pipe(sourcemaps.init())//todo del in prod ...set some if and we have some problem in it...test in livereload
         .pipe(sass().on('error', errorHandler))
@@ -159,7 +146,7 @@ gulp.task('sass', function(){
         //.pipe(sourcemaps.init({loadMaps: true}))//todo we have some problem in browsersync
         .pipe(autoprefixer({ browser: ['last 2 version'] }))
         //.pipe(sourcemaps.write())
-        .pipe(gulp.dest('temp/f2/css'))
+        .pipe(gulp.dest(devDest + pathProject.sass.output))
         .pipe(reload({stream:true}));
 });
 //---JADE
@@ -196,39 +183,26 @@ gulp.task('watch', function () {
 //---Serve
 gulp.task('serve', function(){
     browsersync.init({
-        server: 'temp/f2',
+        server: devDest,
         port: webServerPort,
         ui: {
             port: apiServerPort
         },
         open: autoOpenBrowser
     });
-
     //watch all for files in dest folder
     //browsersync.watch('temp/folder/**/*.*').on('change',reload);
 });
 
 //---BUILD
-gulp.task('build',['js','css','img','fonts','assets','sass','jade'], function(callback){
-    callback(console.log('--- Build DONE ---'));
+gulp.task('build',['js','css','img','fonts','assets','sass','jade'], function(){
+    return ulog(ucolors.green("-------- Build DONE --------"));
 });
 
-gulp.task('default',['build','serve','watch'], function(callback){
-    console.log('+++');
-    callback();
+gulp.task('default',['build','serve','watch'], function(){
+    return ulog(ucolors.green("-------- Default RUN -------"));
 });
 
-
-//===================================================
-//// Инициализируем плагины
-//    imagemin = require('gulp-imagemin'),
-//    cssbeautify = require('gulp-cssbeautify'),
-//    gutil = require('gulp-util'),
-//    cache = require('gulp-cache'),
-//    include = require('gulp-include'),
-//    rename = require("gulp-rename"),
-//    uglify = require('gulp-uglify'),
-//    imageminPngquant = require('imagemin-pngquant'),
 
 //// Копируем и минимизируем изображения
 //gulp.task('images', function() {
