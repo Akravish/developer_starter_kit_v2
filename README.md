@@ -1,8 +1,7 @@
 ### To do
 
 1. add modernizr.js
-2. normalize.css
-3. uprgade browser.jade
+2. uprgade browser.jade
 
 
 # Frontend Starter Kit v - 2.0.0
