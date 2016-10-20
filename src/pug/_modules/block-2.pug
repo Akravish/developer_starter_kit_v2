@@ -23,8 +23,7 @@
                         a(href='mailto:company@arnestcom.ru') company@arnestcom.ru
 
             ul.mainContacts__sellers.contactsSellers
-                - for (var i = 1; i < 20; i++) {
-                li.contactsSellers__item
-                    a.contactsSellers__link(href='#')
-                        img.contactsSellers__img(src='img/media/sellers/seller-' + i + '.png' alt='Seller')
-                - }
+                - for (var i = 1; i < 20; i++)
+                    li.contactsSellers__item
+                        a.contactsSellers__link(href='#')
+                            img.contactsSellers__img(src='img/media/sellers/seller-' + i + '.png' alt='Seller')

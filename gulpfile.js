@@ -9,8 +9,9 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     newer = require('gulp-newer'), //todo with 40ms, without 30ms....fix it
-    jadeInheritance = require('gulp-jade-inheritance'),
-    jade = require('gulp-jade');
+    pugInheritance = require('gulp-pug-inheritance'),
+    pug = require('gulp-pug'),
+    babel = require('gulp-babel');
 //---END Base imports and vars
 
 //---Error
@@ -34,7 +35,7 @@ var devSrc = 'src',
     pathProject = {
         del: '/**/*.*',
         js: {
-            input: '/js/*.js',
+            input: '/js/**/*.js',
             output: '/js'
         },
         css: {
@@ -61,10 +62,10 @@ var devSrc = 'src',
             input: '/sass/*.sass',
             output: '/css'
         },
-        jade: {
-            input1: '/jade/*.jade',
-            input2: '/jade',
-            watchPath: '/**/*.jade'
+        pug: {
+            input1: '/pug/*.pug',
+            input2: '/pug/',
+            watchPath: '/**/*.pug'
         }
     };
 
@@ -95,6 +96,7 @@ gulp.task('js', function () {
     return gulp.src(devSrc + pathProject.js.input)
         .on('error', errorHandler)
         .pipe(newer(devDest + pathProject.js.input))
+        .pipe(babel())
         .pipe(gulp.dest(devDest + pathProject.js.output))
         .pipe(reload({stream:true}));
 });
@@ -149,14 +151,14 @@ gulp.task('sass', function(){
         .pipe(gulp.dest(devDest + pathProject.sass.output))
         .pipe(reload({stream:true}));
 });
-//---JADE
-gulp.task('jade', function() {
-    gulp.src([devSrc + pathProject.jade.input1,'!src/jade/_*'])
-        .pipe(jadeInheritance({ basedir: devSrc + pathProject.jade.input2}))
+//---PUG
+gulp.task('pug', function() {
+    gulp.src([devSrc + pathProject.pug.input1,'!src/pug/_*'])
+        //.pipe(pugInheritance({ basedir: devSrc + pathProject.pug.input2}))
         .on('error', errorHandler)
-        .pipe(jade({
+        .pipe(pug({
             pretty: '\t',
-            basedir: devSrc + pathProject.jade.input1
+            basedir: devSrc + pathProject.pug.input1
         }))
         .pipe(gulp.dest(devDest + '/'))
         .pipe(reload({stream:true}));
@@ -176,8 +178,8 @@ gulp.task('watch', function () {
     gulp.watch(devSrc + pathProject.assets.input, ['assets']);
     //sass
     gulp.watch(devSrc +'/**/*.sass', ['sass']);
-    //jade
-    gulp.watch(devSrc + pathProject.jade.watchPath, ['jade']);
+    //pug
+    gulp.watch(devSrc + pathProject.pug.watchPath, ['pug']);
 });
 
 //---Serve
@@ -195,7 +197,7 @@ gulp.task('serve', function(){
 });
 
 //---BUILD
-gulp.task('build',['js','css','img','fonts','assets','sass','jade'], function(){
+gulp.task('build',['js','css','img','fonts','assets','sass','pug'], function(){
     return ulog(ucolors.green("-------- Build DONE --------"));
 });
 
