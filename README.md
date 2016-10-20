@@ -10,7 +10,7 @@
 
 ### Frontend
 
-* [jade][1]
+* [pug][1]
 * [sass][2]
 * [js][3]
 
@@ -68,7 +68,7 @@ http://localhost:8000
 http://localhost:3001
 ~~~
 
-[1]: http://jade-lang.com/
+[1]: https://pugjs.org/
 [2]: http://sass-lang.com/
 [3]: http://www.ecmascript.org/
 [4]: http://bower.io/
