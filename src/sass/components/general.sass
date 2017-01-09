@@ -15,17 +15,57 @@ html,body
 
 //---grid skeleton
 .wrapper
-  margin: 0 auto
+  max-width: 1010px
+  width: 100%
+  +margin-center
+  padding-left: 15px
+  padding-right: 15px
+  box-sizing: border-box
 
-.column
-  margin: 0 auto
+.wrapper-mobile
+  max-width: 1010px
+  width: 100%
+  +margin-center
+  padding-left: 15px
+  padding-right: 15px
+  box-sizing: border-box
+
+.mt-b
+  margin-top: $mp-b
+.mt-m
+  margin-top: $mp-m
+.mt-s
+  margin-top: $mp-s
+
+.mb-b
+  margin-bottom: $mp-b
+.mb-m
+  margin-bottom: $mp-m
+.mb-s
+  margin-bottom: $mp-s
+
+.pt-b
+  padding-top: $mp-b
+.pt-m
+  padding-top: $mp-m
+.pt-s
+  padding-top: $mp-s
+
+.pb-b
+  padding-bottom: $mp-b
+.pb-m
+  padding-bottom: $mp-m
+.pb-s
+  padding-bottom: $mp-s
+
+
+.pull-center
+  text-align: center
 
 .f-table
   display: table
-
 .f-tr
   display: table-row
-
 .f-td
   display: table-cell
 
@@ -33,19 +73,31 @@ html,body
 .bold
   font-weight: 700
 
-.link
-  text-decoration: underline
-  &:hover,&:active
-    text-decoration: none
+.uppercase
+  text-transform: uppercase
 
-//---special style
-.wrapper
-  background-color: green
-
-
+@media (max-width: 980px)
+  .wrapper-mobile
+    max-width: 980px
+    padding-left: 0
+    padding-right: 0
 
 
+//---BREAKPOINTS
 
+//---Mobile S    = 320
+//---Mobile M    = 375
+//---Mobile L    = 425
+//---            = 480
+//---Tablet      = 768
+//---            = 980
+//---Laptop      = 1024
+//---            = 1280
+//---            = 1366
+//---Laptop L    = 1440
+//---            = 1650
+//---            = 1920
+//---4k          = 2560
 
 
 

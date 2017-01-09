@@ -4,7 +4,7 @@
 2. uprgade browser.jade
 
 
-# Frontend Starter Kit v - 2.0.0
+# Frontend Starter Kit v - 2.2
 
 ## Technologies
 
